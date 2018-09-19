@@ -11,7 +11,7 @@ module Bugsnag
     property referer : String?
 
     def initialize(context : HTTP::Server::Context)
-      @client_ip = context.client_ip.to_s
+      @client_ip = "127.0.0.1" # context.client_ip.to_s
       @http_method = context.request.method
       @url = context.request.path
       set_headers(context)
