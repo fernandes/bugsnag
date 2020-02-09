@@ -13,7 +13,7 @@ module Bugsnag
     def initialize(context : HTTP::Server::Context)
       @client_ip = remote_ip(context.request)
       @http_method = context.request.method
-      @url = context.request.path
+      @url = request_url(context.request)
       set_headers(context)
     end
 
@@ -37,6 +37,10 @@ module Bugsnag
            request.remote_address ||
            "127.0.0.1"
       ip.split(',').first.strip
+    end
+
+    private def request_url(request) : String
+      "#{request.path}?#{request.query_params}"
     end
   end
 end
