@@ -9,7 +9,8 @@ describe Bugsnag do
       response = HTTP::Server::Response.new(io)
       context = HTTP::Server::Context.new(request, response)
       request = Bugsnag::Request.new(context)
-      request.url.should eq("/?foo=bar&password=[FILTERED]")
+      request.params["foo"].should eq("bar")
+      request.params["password"].should eq("[FILTERED]")
     end
   end
 end

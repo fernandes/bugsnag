@@ -8,12 +8,14 @@ module Bugsnag
     @[JSON::Field(key: "httpMethod")]
     property http_method : String?
     property url : String?
+    property params : Hash(String, String)
     property referer : String?
 
     def initialize(context : HTTP::Server::Context)
       @client_ip = remote_ip(context.request)
       @http_method = context.request.method
-      @url = request_url(context.request)
+      @url = context.request.path
+      @params = filtered_query_params(context.request.query_params).to_h
       set_headers(context)
     end
 
@@ -39,15 +41,17 @@ module Bugsnag
       ip.split(',').first.strip
     end
 
-    private def request_url(request) : String
-      "#{request.path}?#{filtered_query_params(request.query_params)}"
-    end
-
-    private def filtered_query_params(query_params)
-      query_params.each_with_object([] of String) { |(name, value), s|
-        filtered_value = filter_query_param?(name) ? "[FILTERED]" : value
-        s << "#{name}=#{filtered_value}"
-      }.join("&")
+    private def filtered_query_params(query_params) : HTTP::Params
+      HTTP::Params.new.tap do |filtered_params|
+        query_params.each do |name, value|
+          v = if filter_query_param?(name)
+                "[FILTERED]"
+              else
+                value
+              end
+          filtered_params.add(name, v)
+        end
+      end
     end
 
     private def filter_query_param?(name)
