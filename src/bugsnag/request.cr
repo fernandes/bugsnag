@@ -14,12 +14,20 @@ module Bugsnag
     def initialize(context : HTTP::Server::Context)
       @client_ip = remote_ip(context.request)
       @http_method = context.request.method
-      @url = context.request.path
+      @url = set_url(context.request)
       @params = filtered_query_params(context.request.query_params).to_h
       set_headers(context)
     end
 
-    def set_headers(context)
+    private def set_url(request)
+      url = "#{request.host}#{request.path}"
+      unless request.query_params.empty?
+        url += "?" + filtered_query_params(request.query_params).to_s
+      end
+      url
+    end
+
+    private def set_headers(context)
       new_headers = Hash(String, String).new
       request_headers = context.request.headers.to_h
       request_headers.keys.each do |key|
