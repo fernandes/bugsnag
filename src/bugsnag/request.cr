@@ -40,7 +40,25 @@ module Bugsnag
     end
 
     private def request_url(request) : String
-      "#{request.path}?#{request.query_params}"
+      "#{request.path}?#{filtered_query_params(request.query_params)}"
+    end
+
+    private def filtered_query_params(query_params)
+      query_params.each_with_object([] of String) { |(name, value), s|
+        filtered_value = filter_query_param?(name) ? "[FILTERED]" : value
+        s << "#{name}=#{filtered_value}"
+      }.join("&")
+    end
+
+    private def filter_query_param?(name)
+      Bugsnag.config.metadata_filters.any? do |filter|
+        case filter
+        when Regex
+          filter =~ name
+        when String
+          name.include?(filter)
+        end
+      end
     end
   end
 end
