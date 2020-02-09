@@ -11,7 +11,7 @@ module Bugsnag
     property referer : String?
 
     def initialize(context : HTTP::Server::Context)
-      @client_ip = context.request.headers["X-Forwarded-For"]?
+      @client_ip = remote_ip(context.request)
       @http_method = context.request.method
       @url = context.request.path
       set_headers(context)
@@ -24,6 +24,19 @@ module Bugsnag
         new_headers[key] = request_headers[key].join(" ")
       end
       @headers = new_headers
+    end
+
+    private def remote_ip(request) : String
+      ip = request.headers["HTTP_X_FORWARDED_FOR"]? ||
+           request.headers["X_FORWARDED_FOR"]? ||
+           request.headers["REMOTE_ADDR"]? ||
+           request.headers["X-Real-IP"]? ||
+           request.headers["HTTP_CLIENT_IP"]? ||
+           request.headers["HTTP_X_FORWARDED"]? ||
+           request.headers["HTTP_X_CLUSTER_CLIENT_IP"]? ||
+           request.remote_address ||
+           "127.0.0.1"
+      ip.split(',').first.strip
     end
   end
 end
