@@ -9,6 +9,8 @@ module Bugsnag
     property http_method : String?
     property url : String?
     property params : Hash(String, String)
+    @[JSON::Field(key: "postParams")]
+    property post_params : Hash(String, String)?
     property referer : String?
 
     def initialize(context : HTTP::Server::Context)
@@ -16,6 +18,7 @@ module Bugsnag
       @http_method = context.request.method
       @url = set_url(context.request)
       @params = filtered_query_params(context.request.query_params).to_h
+      set_post_params(context)
       set_headers(context)
     end
 
@@ -60,6 +63,18 @@ module Bugsnag
           filtered_params.add(name, v)
         end
       end
+    end
+
+    private def set_post_params(context)
+      new_params = Hash(String, String).new
+      HTTP::Params.parse(context.request.body.not_nil!.to_s).each do |key, value|
+        new_params[key] = if filter_query_param?(name)
+                            "[FILTERED]"
+                          else
+                            value
+                          end
+      end
+      @post_params = new_params
     end
 
     private def filter_query_param?(name)
