@@ -3,7 +3,6 @@ require "json"
 require "./bugsnag/*"
 
 module Bugsnag
-
   @@config = Config.new
 
   def self.config
@@ -15,6 +14,8 @@ module Bugsnag
   end
 
   def self.report(context : HTTP::Server::Context, exception : ::Exception)
+    return "Not in release stage" unless @@config.release_stage.includes?(ENV.fetch("BUGSNAG_RELEASE_STAGE", ""))
+
     begin
       notifier = Notifier.new(@@config.name, @@config.version, @@config.url)
       event = Event.new(context, exception)

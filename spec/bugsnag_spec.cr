@@ -21,4 +21,30 @@ describe Bugsnag do
       request.post_params.not_nil!["login_form:password"].should eq("[FILTERED]")
     end
   end
+
+  describe "release stages" do
+    it "sends when release stage matches the BUGSNAG_RELEASE_STAGE environment variable" do
+      ENV["BUGSNAG_RELEASE_STAGE"] = "forthehellofit"
+      Bugsnag.config { |c| c.release_stage = ["forthehellofit"] }
+
+      context = HTTP::Server::Context.new(
+        HTTP::Request.new("GET", "/"),
+        HTTP::Server::Response.new(IO::Memory.new))
+      exception = Exception.new("WTF?!?")
+
+      Bugsnag.report(context, exception).should eq(nil)
+    end
+
+    it "does not send when the release stage does not match" do
+      ENV["BUGSNAG_RELEASE_STAGE"] = "popeanope"
+      Bugsnag.config { |c| c.release_stage = ["saywhat"] }
+
+      context = HTTP::Server::Context.new(
+        HTTP::Request.new("GET", "/"),
+        HTTP::Server::Response.new(IO::Memory.new))
+      exception = Exception.new("WTF?!?")
+
+      Bugsnag.report(context, exception).should eq("Not in release stage")
+    end
+  end
 end
