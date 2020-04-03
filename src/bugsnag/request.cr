@@ -66,8 +66,10 @@ module Bugsnag
     end
 
     private def set_post_params(context)
+      return if context.request.body.nil?
+
       new_params = Hash(String, String).new
-      HTTP::Params.parse(context.request.body.not_nil!.to_s).each do |key, value|
+      HTTP::Params.parse(context.request.body.to_s).each do |key, value|
         new_params[key] = if filter_query_param?(key)
                             "[FILTERED]"
                           else

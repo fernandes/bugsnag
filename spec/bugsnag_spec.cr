@@ -2,15 +2,23 @@ require "./spec_helper"
 require "http/server"
 
 describe Bugsnag do
-  describe "metadta filters" do
+  describe "metadata filters" do
     it "filters out protected values in query params" do
-      io = IO::Memory.new
-      request = HTTP::Request.new("GET", "/?foo=bar&password=nobeuno", HTTP::Headers{"Host" => "bugsnag.com"})
-      response = HTTP::Server::Response.new(io)
-      context = HTTP::Server::Context.new(request, response)
-      request = Bugsnag::Request.new(context)
+      request = get_request({
+        "foo"      => "bar",
+        "password" => "snakesonaplane",
+      })
       request.params["foo"].should eq("bar")
       request.params["password"].should eq("[FILTERED]")
+    end
+
+    it "filters out protected post param values" do
+      request = post_request({
+        "username"            => "samjackson",
+        "login_form:password" => "snakesonaplane",
+      })
+      request.post_params.not_nil!["username"].should eq("samjackson")
+      request.post_params.not_nil!["login_form:password"].should eq("[FILTERED]")
     end
   end
 end
