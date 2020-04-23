@@ -9,17 +9,26 @@ module Bugsnag
     yield @@config
   end
 
-  def self.config
+  def self.config : Config
     @@config
   end
 
-  def self.report(context : HTTP::Server::Context, exception : ::Exception)
+  def self.report(context : HTTP::Server::Context, exception : ::Exception) : Nil
+    event = Event.new(context, exception)
+    yield event
+    report(context, exception, event)
+  end
+
+  def self.report(context : HTTP::Server::Context, exception : ::Exception) : Nil
+    report(context, exception) { |event| }
+  end
+
+  def self.report(context : HTTP::Server::Context, exception : ::Exception, event : Event) : Nil
     return "Not in release stage" unless @@config.release_stage.includes?(ENV.fetch("BUGSNAG_RELEASE_STAGE", ""))
 
     begin
-      notifier = Notifier.new(@@config.name, @@config.version, @@config.url)
-      event = Event.new(context, exception)
-      report = Report.new(@@config.api_key, notifier, [event])
+      notifier = Notifier.new(config.name, config.version, config.url)
+      report = Report.new(config.api_key, notifier, [event])
 
       spawn {
         begin
