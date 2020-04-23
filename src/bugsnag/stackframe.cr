@@ -12,6 +12,6 @@ module Bugsnag
     property in_project : Bool?
     property code : Hash(String, String)?
 
-    def initialize(@file, @line_number, @method);end
+    def initialize(@file, @line_number, @method); end
   end
 end

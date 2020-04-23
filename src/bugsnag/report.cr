@@ -7,6 +7,6 @@ module Bugsnag
     property notifier : Notifier
     property events : Array(Event)
 
-    def initialize(@api_key, @notifier, @events);end
+    def initialize(@api_key, @notifier, @events); end
   end
 end

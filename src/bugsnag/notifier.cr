@@ -6,6 +6,6 @@ module Bugsnag
     property version : String
     property url : String
 
-    def initialize(@name, @version, @url);end
+    def initialize(@name, @version, @url); end
   end
 end
