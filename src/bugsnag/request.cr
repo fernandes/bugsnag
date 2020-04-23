@@ -18,6 +18,7 @@ module Bugsnag
       @http_method = context.request.method
       @url = set_url(context.request)
       @params = filtered_query_params(context.request.query_params).to_h
+      @referer = set_referer(context.request)
       set_post_params(context)
       set_headers(context)
     end
@@ -88,6 +89,10 @@ module Bugsnag
           name.include?(filter)
         end
       end
+    end
+
+    private def set_referer(request) : String?
+      request.headers["Referer"]?
     end
   end
 end
