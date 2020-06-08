@@ -42,6 +42,15 @@ class MyMiddlware < MyFrameworkHandler
 end
 ```
 
+Optionally, you can customize the `event` object by passing a block to `report`.
+
+
+```crystal
+Bugsnag.report(context, ex) do |event|
+  event.user = Bugsnag::User.new(id: "1", name: "Foo", email: "foo@bar.baz")
+end
+```
+
 ## Contributing
 
 1. Fork it (<https://github.com/fridgerator/bugsnag/fork>)
