@@ -4,7 +4,7 @@ module Bugsnag
     property name : String
     property version : String
     property url : String
-    property release_stage : Array(String)
+    property release_stage : Bool
     property metadata_filters : Array(Regex)
 
     def initialize
@@ -12,7 +12,7 @@ module Bugsnag
       @name = ""
       @version = ""
       @url = ""
-      @release_stage = ["production"]
+      @release_stage = true
       @metadata_filters = [
         /authorization/i,
         /cookie/i,

@@ -23,9 +23,8 @@ describe Bugsnag do
   end
 
   describe "release stages" do
-    it "sends when release stage matches the BUGSNAG_RELEASE_STAGE environment variable" do
-      ENV["BUGSNAG_RELEASE_STAGE"] = "forthehellofit"
-      Bugsnag.config { |c| c.release_stage = ["forthehellofit"] }
+    it "sends when release stage evaluates to true" do
+      Bugsnag.config { |c| c.release_stage = true }
 
       context = HTTP::Server::Context.new(
         HTTP::Request.new("GET", "/"),
@@ -36,8 +35,7 @@ describe Bugsnag do
     end
 
     it "does not send when the release stage does not match" do
-      ENV["BUGSNAG_RELEASE_STAGE"] = "popeanope"
-      Bugsnag.config { |c| c.release_stage = ["saywhat"] }
+      Bugsnag.config { |c| c.release_stage = false }
 
       context = HTTP::Server::Context.new(
         HTTP::Request.new("GET", "/"),

@@ -25,7 +25,7 @@ Bugsnag.config do |conf|
   conf.name = "Application Name"
   conf.version = "1.0"
   conf.url = "https://my-website.com/"
-  conf.release_stage = ["production", "staging"]
+  conf.release_stage = true
 end
 
 # In your middleware
