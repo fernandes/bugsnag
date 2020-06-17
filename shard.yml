@@ -3,6 +3,8 @@ version: 0.2.1
 
 authors:
   - Nick Franken <shnick@gmail.com>
+  - Russell Smith <russ@bashme.org>
+  - Jeremy Woertink <jeremywoertink@gmail.com>
 
 crystal: 0.35.0
 
