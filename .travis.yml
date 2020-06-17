@@ -2,4 +2,3 @@ language: crystal
 crystal:
   - latest
   - nightly
-  - 0.34.0
