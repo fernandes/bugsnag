@@ -47,6 +47,3 @@ describe Bugsnag do
     end
   end
 end
-
-@stacktrace = (ex.backtrace || Array(String).new).map do |frame|
-@stacktrace = (ex.backtrace? || Array(String).new).map do |frame|
