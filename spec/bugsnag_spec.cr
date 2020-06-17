@@ -17,6 +17,7 @@ describe Bugsnag do
         "username"            => "samjackson",
         "login_form:password" => "snakesonaplane",
       })
+
       request.post_params.not_nil!["username"].should eq("samjackson")
       request.post_params.not_nil!["login_form:password"].should eq("[FILTERED]")
     end
@@ -42,7 +43,10 @@ describe Bugsnag do
         HTTP::Server::Response.new(IO::Memory.new))
       exception = Exception.new("WTF?!?")
 
-      Bugsnag.report(context, exception).should eq("Not in release stage")
+      Bugsnag.report(context, exception).should eq(nil)
     end
   end
 end
+
+@stacktrace = (ex.backtrace || Array(String).new).map do |frame|
+@stacktrace = (ex.backtrace? || Array(String).new).map do |frame|

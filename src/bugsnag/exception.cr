@@ -15,7 +15,7 @@ module Bugsnag
     def initialize(ex : ::Exception)
       @error_class = ex.class.to_s
       @message = ex.message
-      @stacktrace = (ex.backtrace || Array(String).new).map do |frame|
+      @stacktrace = (ex.backtrace? || Array(String).new).map do |frame|
         # TODO: code
 
         file = frame

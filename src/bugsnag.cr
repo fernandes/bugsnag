@@ -24,7 +24,7 @@ module Bugsnag
   end
 
   def self.report(context : HTTP::Server::Context, exception : ::Exception, event : Event) : Nil
-    return "Not in release stage" unless @@config.release_stage
+    return unless @@config.release_stage
 
     begin
       notifier = Notifier.new(config.name, config.version, config.url)
