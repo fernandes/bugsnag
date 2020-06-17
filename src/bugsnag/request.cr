@@ -48,9 +48,9 @@ module Bugsnag
            request.headers["HTTP_CLIENT_IP"]? ||
            request.headers["HTTP_X_FORWARDED"]? ||
            request.headers["HTTP_X_CLUSTER_CLIENT_IP"]? ||
-           request.remote_address ||
+           request.remote_address.as(Socket::IPAddress).address ||
            "127.0.0.1"
-      ip.split(',').first.strip
+      ip.as(String).split(',').first.strip
     end
 
     private def filtered_query_params(query_params) : HTTP::Params
