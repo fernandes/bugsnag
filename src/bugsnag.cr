@@ -20,7 +20,7 @@ module Bugsnag
   end
 
   def self.report(context : HTTP::Server::Context, exception : ::Exception) : Nil
-    report(context, exception) { |event| }
+    report(context, exception) { |_event| }
   end
 
   def self.report(context : HTTP::Server::Context, exception : ::Exception, event : Event) : Nil
