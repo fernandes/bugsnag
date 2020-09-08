@@ -48,7 +48,8 @@ module Bugsnag
            request.headers["HTTP_CLIENT_IP"]? ||
            request.headers["HTTP_X_FORWARDED"]? ||
            request.headers["HTTP_X_CLUSTER_CLIENT_IP"]? ||
-           request.remote_address || "127.0.0.1"
+           request.remote_address.try(&.as(Socket::IPAddress).address) ||
+           "127.0.0.1"
       ip.as(String).split(',').first.strip
     end
 

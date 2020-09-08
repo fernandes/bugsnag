@@ -6,7 +6,7 @@ authors:
   - Russell Smith <russ@bashme.org>
   - Jeremy Woertink <jeremywoertink@gmail.com>
 
-crystal: 0.35.0
+crystal: 0.35.1
 
 license: MIT
 
