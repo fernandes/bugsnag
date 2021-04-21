@@ -25,6 +25,7 @@ describe Bugsnag do
 
   describe "release stages" do
     it "sends when release stage evaluates to true" do
+      # ameba:disable Style/VerboseBlock
       Bugsnag.config { |c| c.release_stage = true }
 
       context = HTTP::Server::Context.new(
@@ -36,6 +37,7 @@ describe Bugsnag do
     end
 
     it "does not send when the release stage does not match" do
+      # ameba:disable Style/VerboseBlock
       Bugsnag.config { |c| c.release_stage = false }
 
       context = HTTP::Server::Context.new(

@@ -24,11 +24,17 @@ module Bugsnag
     end
 
     private def set_url(request)
-      url = "#{request.host}#{request.path}"
-      unless request.query_params.empty?
-        url += "?" + filtered_query_params(request.query_params).to_s
+      String.build do |url|
+      {% if compare_versions(Crystal::VERSION, "0.36.0") > 0 %}
+        url << "#{request.hostname}#{request.path}"
+      {% else %}
+        url << "#{request.host}#{request.path}"
+      {% end %}
+        unless request.query_params.empty?
+          url << "?"
+          url << filtered_query_params(request.query_params).to_s
+        end
       end
-      url
     end
 
     private def set_headers(context)
