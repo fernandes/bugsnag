@@ -9,13 +9,13 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   bugsnag:
-    github: fridgerator/bugsnag
+    github: russ/bugsnag
 ```
 
 ## Usage
 
-* This is meant to catch exceptions in a compiled production environment.
-* Dont use spawn to call Bugsnag.report, the http request sent to bugsnag will be done in a separate fiber.  Building the report needs the context to remain open, and if `Bugsnag.report` is called in a spawn you will get a closed pipe error.
+- This is meant to catch exceptions in a compiled production environment.
+- Dont use spawn to call Bugsnag.report, the http request sent to bugsnag will be done in a separate fiber. Building the report needs the context to remain open, and if `Bugsnag.report` is called in a spawn you will get a closed pipe error.
 
 ```crystal
 require "bugsnag"
@@ -43,7 +43,6 @@ end
 ```
 
 Optionally, you can customize the `event` object by passing a block to `report`.
-
 
 ```crystal
 Bugsnag.report(context, ex) do |event|
